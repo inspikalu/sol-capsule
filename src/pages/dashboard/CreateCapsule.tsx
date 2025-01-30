@@ -137,6 +137,10 @@ const CreateCapsule = () => {
             return;
         }
 
+        const toastId = toast.loading('Creating your time capsule...', {
+            description: 'Please keep this window open.'
+        });
+
         try {
             setIsUploading(true);
             toast.loading('Creating your time capsule...', {
@@ -154,6 +158,8 @@ const CreateCapsule = () => {
                 walletProvider,
                 connection
             });
+
+            toast.dismiss(toastId);
 
             // Reset form after successful creation
             setFormData({
@@ -177,6 +183,7 @@ const CreateCapsule = () => {
             });
 
         } catch (error: any) {
+            toast.dismiss(toastId);
             toast.error('Creation failed', {
                 description: error.message || 'Please try again or contact support.'
             });

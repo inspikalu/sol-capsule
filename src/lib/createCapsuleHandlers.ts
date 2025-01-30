@@ -8,6 +8,50 @@ import { CreateTimeCapsuleProps } from "@/lib/interfaces";
 import { clusterApiUrl } from '@solana/web3.js';
 import { toast } from 'sonner';
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+async function saveCapsuleToDb({
+    walletAddress,
+    nftAddress,
+    collectionAddress,
+    fileHash,
+    metadata,
+    transactionHash
+}: {
+    walletAddress: string;
+    nftAddress: string;
+    collectionAddress: string;
+    fileHash: string;
+    metadata: any;
+    transactionHash: string;
+}) {
+    try {
+        const response = await fetch(`${SERVER_URL}/capsules`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                walletAddress,
+                nftAddress,
+                collectionAddress,
+                fileHash,
+                metadata,
+                transactionHash
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server responded with ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error: any) {
+        console.error('Error saving to database:', error);
+        throw new Error(`Failed to save to database: ${error.message}`);
+    }
+}
+
 export const createTimeCapsule = async function ({
     file,
     formData,
@@ -125,21 +169,35 @@ export const createTimeCapsule = async function ({
         }).sendAndConfirm(umi, {
             confirm: { commitment: "finalized" }
         });
+        console.log("NFT created successfully:", nftTx);
+
+        // Save to database
+        toast.loading('Saving time capsule to database...', { id: toastId });
+        await saveCapsuleToDb({
+            walletAddress: signer.publicKey.toString(),
+            nftAddress: nftSigner.publicKey.toString(),
+            collectionAddress: collectionSigner.publicKey.toString(),
+            fileHash: fileUpload,
+            metadata: NFTMetadata,
+            transactionHash: nftTx.signature.toString()
+        });
 
         // Final success notification
         toast.success('Time capsule created successfully! 🎉', {
             id: toastId,
             duration: 5000,
-            description: 'Your digital memory has been securely stored on the blockchain.'
+            description: 'Your digital memory has been securely stored on the blockchain and database.'
         });
 
-        return {
+        const returnData = {
             fileHash: fileUpload,
             collectionAddress: collectionSigner.publicKey,
             nftAddress: nftSigner.publicKey,
             collectionTx: collectionTx.signature.toString(),
             nftTx: nftTx.signature.toString()
-        };
+        }
+        console.log("Time capsule creation successful:", returnData);
+        return returnData;
 
     } catch (error: any) {
         console.error("Error in createTimeCapsule:", error);
