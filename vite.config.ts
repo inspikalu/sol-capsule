@@ -19,10 +19,16 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Add these browser-compatible alternatives
+      stream: 'stream-browserify',
+      crypto: 'crypto-browserify',
+      util: 'util',
     },
   },
   define: {
     'process.env': {},
+    'process.env.BROWSER': true,
+    'process.env.NODE_DEBUG': false,
     global: {},
   },
   optimizeDeps: {
@@ -37,6 +43,10 @@ export default defineConfig({
     target: 'es2020',
     commonjsOptions: {
       transformMixedEsModules: true
-    }
+    },
+    rollupOptions: {
+      // Explicitly mark problematic Node.js modules as external
+      external: ['fs', 'path', 'os'],
+    },
   }
 })
