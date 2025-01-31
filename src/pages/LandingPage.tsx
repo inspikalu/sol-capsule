@@ -1,4 +1,4 @@
-import { useAppKit, useAppKitAccount, useWalletInfo } from '@reown/appkit/react';
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 import { Clock, Package, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import truncateAddress from '@/lib/truncateWallet';
