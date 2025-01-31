@@ -1,17 +1,56 @@
-# Reown AppKit Example using Solana Adapter (Vite + React)
+# Temporal Vault - Blockchain Time Capsule Platform
 
-This is a [Vite](https://vitejs.dev) project together with React.
+A decentralized platform for creating and managing digital time capsules on the Solana blockchain.
 
-## Usage
+## 🌐 Live Demo
+[Live Demo URL](https://sol-capsule.vercel.app/) <!-- Add your live demo URL here -->
 
-1. Go to [Reown Cloud](https://cloud.reown.com) and create a new project.
-2. Copy your `Project ID`
-3. Rename `.env.example` to `.env` and paste your `Project ID` as the value for `VITE_PROJECT_ID`
-4. Run `pnpm install` to install dependencies
-5. Run `pnpm run dev` to start the development server
 
-## Resources
+## 🚀 Features
 
-- [Reown — Docs](https://docs.reown.com)
-- [Vite — GitHub](https://github.com/vitejs/vite)
-- [Vite — Docs](https://vitejs.dev/guide/)
+### Core Features
+- **Digital Time Capsules**: Create blockchain-secured time capsules with customizable release dates
+- **Wallet Integration**: Seamless connection with Solana wallets
+- **NFT Minting**: Each time capsule is minted as a unique NFT
+- **Marketplace**: Buy and sell time capsules (Coming Soon)
+- **Time-Lock Mechanism**: Secure content until the specified release date
+- **Public/Private Options**: Choose between public and private capsule visibility
+
+### Technical Features
+- **Solana Integration**: Built on Solana blockchain for fast, secure transactions
+- **IPFS Storage**: Decentralized storage for capsule content
+- **Responsive Design**: Mobile-friendly user interface
+- **Real-time Updates**: Live transaction status and notifications
+
+## 🛠️ Technology Stack
+
+- **Frontend**: React.js, TypeScript
+- **Styling**: TailwindCSS
+- **Blockchain**: Solana
+- **Web3 Integration**: @reown/appkit
+- **UI Components**: Radix UI
+- **State Management**: React Context
+- **Routing**: React Router
+- **Notifications**: Sonner
+- **Icons**: Lucide React
+
+## 📋 Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Solana wallet (Phantom, Solflare, etc.)
+- Basic knowledge of Solana blockchain
+
+## 🔧 Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd sol-capsule
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn
