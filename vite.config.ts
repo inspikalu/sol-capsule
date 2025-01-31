@@ -5,48 +5,39 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      jsxRuntime: 'automatic'
+    }),
     nodePolyfills({
-      include: ['buffer', 'crypto', 'stream', 'os', 'events', 'path', 'process'],
+      include: ['buffer', 'os', 'path', 'stream', 'util', 'crypto'],
       globals: {
         Buffer: true,
         global: true,
-        process: true,
-      },
-      protocolImports: true,
+        process: true
+      }
     }),
+    {
+      name: 'fs-shim',
+      enforce: 'pre',
+      resolveId(id) {
+        if (id === 'fs') return '\0virtual:fs'
+      },
+      load(id) {
+        if (id === '\0virtual:fs') {
+          return `
+            export const readFileSync = () => { throw new Error('File system operations not supported in browser') }
+            export const writeFileSync = () => { throw new Error('File system operations not supported in browser') }
+            export const existsSync = () => false
+            export const homedir = () => '/'
+            export default { readFileSync, writeFileSync, existsSync, homedir }
+          `
+        }
+      }
+    }
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      // Add these browser-compatible alternatives
-      stream: 'stream-browserify',
-      crypto: 'crypto-browserify',
-      util: 'util',
-    },
-  },
-  define: {
-    'process.env': {},
-    'process.env.BROWSER': true,
-    'process.env.NODE_DEBUG': false,
-    global: {},
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      target: 'es2020',
-      supported: {
-        bigint: true
-      },
+      "@": path.resolve(__dirname, "./src")
     }
-  },
-  build: {
-    target: 'es2020',
-    commonjsOptions: {
-      transformMixedEsModules: true
-    },
-    rollupOptions: {
-      // Explicitly mark problematic Node.js modules as external
-      external: ['fs', 'path', 'os'],
-    },
   }
 })

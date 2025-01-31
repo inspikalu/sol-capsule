@@ -3,8 +3,14 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Package, Plus, Lock, LayoutDashboard, Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
+import truncateAddress from '@/lib/truncateWallet';
 
 const DashboardLayout = () => {
+
+    const { open } = useAppKit()
+    const { address, isConnected } = useAppKitAccount()
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const location = useLocation();
     console.log(location)
@@ -76,7 +82,14 @@ const DashboardLayout = () => {
                             {isSidebarOpen && <span className="ml-3">{item.name}</span>}
                         </NavLink>
                     ))}
-                    <appkit-button />
+                    <button
+                        onClick={() => open()}
+                        className="bg-amber-500 text-slate-900 px-6 py-2 rounded-lg text-lg font-semibold 
+                transition-all hover:bg-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 
+                focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                    >
+                        {isConnected && address ? truncateAddress(address) : "Connect Wallet"}
+                    </button>
                 </nav>
 
                 {/* Toggle Button */}

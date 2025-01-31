@@ -1,5 +1,8 @@
+import { useAppKit, useAppKitAccount, useWalletInfo } from '@reown/appkit/react';
 import { Clock, Package, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import truncateAddress from '@/lib/truncateWallet';
+
 
 interface Feature {
     icon: typeof Clock | typeof Package | typeof Lock;
@@ -9,6 +12,9 @@ interface Feature {
 
 
 const LandingPage = () => {
+    const { open } = useAppKit()
+    const { address, isConnected } = useAppKitAccount()
+    console.log(address)
 
     const features: Feature[] = [
         {
@@ -36,7 +42,14 @@ const LandingPage = () => {
                         Temporal Vault
                     </div>
                     <div className='text-white'>
-                        <appkit-button />
+                        <button
+                            onClick={() => open()}
+                            className="bg-amber-500 text-slate-900 px-6 py-2 rounded-lg text-lg font-semibold 
+                transition-all hover:bg-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 
+                focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        >
+                            {isConnected && address ? truncateAddress(address) : "Connect Wallet"}
+                        </button>
                     </div>
                 </div>
             </nav>
@@ -83,6 +96,7 @@ const LandingPage = () => {
                 <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl"></div>
             </div>
+
         </div>
     );
 };
